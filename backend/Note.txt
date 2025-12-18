@@ -1,0 +1,6 @@
+postupdate
+
+VmU42jDKf1vod6E1
+
+mongodb+srv://postupdate:VmU42jDKf1vod6E1@cluster0.x1gndd6.mongodb.net/?appName=Cluster0
+
