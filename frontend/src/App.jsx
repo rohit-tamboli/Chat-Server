@@ -4,13 +4,12 @@ import axios from "axios";
 import CommentSection from "./Components/CommentSection";
 import "./App.css"; // 👈 ye line add karo
 
-
 const API_BASE = "http://localhost:5002/api";
 
 function App() {
   const [posts, setPosts] = useState([]);
   const [text, setText] = useState("");
-  const [file, setFile] = useState(null);
+
   const [userName, setUserName] = useState("");
   const [headline, setHeadline] = useState("");
   const [loading, setLoading] = useState(false);
@@ -59,44 +58,28 @@ function App() {
     fetchPosts();
   }, []);
 
-  const handleFileChange = (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
-    setFile(f);
-  };
-
   const handlePost = async (e) => {
     e.preventDefault();
-    console.log("📩 handlePost called");
 
-    if (!text && !file) {
-      alert("Kuch likho ya file attach karo 🙂");
+    if (!text) {
+      alert("Kuch likho 🙂");
       return;
     }
 
     try {
       setLoading(true);
 
-      const formData = new FormData();
-      formData.append("userName", userName);
-      formData.append("headline", headline);
-      formData.append("text", text);
-      if (file) formData.append("file", file);
-
-      const res = await axios.post(`${API_BASE}/posts`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const res = await axios.post(`${API_BASE}/posts`, {
+        userName,
+        headline,
+        text,
       });
 
-      console.log("✅ Post created:", res.data);
-
       setText("");
-      setFile(null);
-      e.target.reset?.();
-
       await fetchPosts();
     } catch (err) {
-      console.error("❌ Error in handlePost:", err);
-      alert("Post send karte time error aaya. Console check karo.");
+      console.error(err);
+      alert("Post error");
     } finally {
       setLoading(false);
     }
@@ -222,14 +205,6 @@ function App() {
               />
 
               <div className="composer-actions">
-                <label className="file-label">
-                  📎 Attach
-                  <input
-                    type="file"
-                    accept="image/*,application/pdf"
-                    onChange={handleFileChange}
-                  />
-                </label>
                 <button type="submit" disabled={loading}>
                   {loading ? "Posting..." : "Post"}
                 </button>
@@ -263,39 +238,6 @@ function App() {
                 </header>
 
                 {post.text && <p className="post-text">{post.text}</p>}
-
-                {post.fileUrl && post.fileType === "image" && (
-                  <img
-                    src={`http://localhost:5002${post.fileUrl}`}
-                    alt="attachment"
-                    className="post-image"
-                  />
-                )}
-
-                {post.fileUrl && post.fileType === "pdf" && (
-                  <a
-                    href={`http://localhost:5002${post.fileUrl}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="post-file"
-                  >
-                    📄 Open PDF
-                  </a>
-                )}
-
-                {post.fileUrl &&
-                  post.fileType &&
-                  post.fileType !== "image" &&
-                  post.fileType !== "pdf" && (
-                    <a 
-                      href={`http://localhost:5002${post.fileUrl}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="post-file"
-                    >
-                      📁 Download file
-                    </a>
-                  )}
 
                 <footer className="post-footer">
                   <button

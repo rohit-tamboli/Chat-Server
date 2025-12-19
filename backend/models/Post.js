@@ -11,8 +11,7 @@ const postSchema = new mongoose.Schema(
     userName: { type: String, required: true },
     headline: { type: String },
     text: { type: String },
-    fileUrl: { type: String },
-    fileType: { type: String },
+
     comments: [commentSchema],
 
     likes: {
