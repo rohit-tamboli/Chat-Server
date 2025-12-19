@@ -5,6 +5,7 @@ import CommentSection from "./Components/CommentSection";
 import "./App.css"; // 👈 ye line add karo
 
 const API_BASE = "http://localhost:5002/api";
+// const API_BASE = "https://chat-server-ashen-tau.vercel.app/api";
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -105,7 +106,7 @@ function App() {
           p._id === postId
             ? {
                 ...p,
-                likes, // backend se updated likes array
+                likes,
               }
             : p
         )
@@ -115,6 +116,21 @@ function App() {
       console.log("Response data:", err.response?.data);
       console.log("Status:", err.response?.status);
       alert("Like karte waqt error aaya. Console check karo.");
+    }
+  };
+
+  const handleDeletePost = async (postId) => {
+    const ok = window.confirm("Are you sure you want to delete this post?");
+    if (!ok) return;
+
+    try {
+      await axios.delete(`${API_BASE}/posts/${postId}`);
+
+      // UI se bhi remove karo (fast UX)
+      setPosts((prev) => prev.filter((p) => p._id !== postId));
+    } catch (err) {
+      console.error("❌ Delete post error:", err);
+      alert("Post delete karte waqt error aaya.");
     }
   };
 
@@ -245,10 +261,19 @@ function App() {
                     onClick={() => handleToggleLike(post._id)}
                   >
                     {hasUserLiked(post, userName) ? "❤️ Liked" : "❤️ Like"}{" "}
-                    {post.likes && post.likes.length > 0
-                      ? `(${post.likes.length})`
-                      : ""}
+                    {post.likes?.length ? `(${post.likes.length})` : ""}
                   </button>
+
+                  {/* 🗑 DELETE BUTTON */}
+                  {post.userName === userName && (
+                    <button
+                      type="button"
+                      className="delete-btn"
+                      onClick={() => handleDeletePost(post._id)}
+                    >
+                      🗑 Delete
+                    </button>
+                  )}
 
                   <CommentSection
                     postId={post._id}

@@ -37,5 +37,24 @@ router.post("/:id/like", async (req, res) => {
   res.json({ likes: post.likes });
 });
 
+// ❌ DELETE POST
+router.delete("/:id", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    await Post.findByIdAndDelete(req.params.id);
+
+    res.json({ message: "Post deleted successfully" });
+  } catch (err) {
+    console.error("❌ Delete error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 // ✅ EXPORT MUST BE THIS
 module.exports = router;
