@@ -468,6 +468,11 @@ body {
   box-shadow: none;
 }
 
+.like-comment {
+  display: flex;
+  gap: 10px;
+}
+
 /* ---------- Comments ---------- */
 
 .comments-wrapper {
@@ -626,3 +631,15 @@ body {
   }
 }
 
+.delete-btn {
+  margin-left: 8px;
+  background: transparent;
+  border: none;
+  color: #d11a2a;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.delete-btn:hover {
+  text-decoration: underline;
+}

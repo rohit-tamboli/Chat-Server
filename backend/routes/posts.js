@@ -37,6 +37,7 @@ router.post("/:id/like", async (req, res) => {
   res.json({ likes: post.likes });
 });
 
+
 // ❌ DELETE POST
 router.delete("/:id", async (req, res) => {
   try {
@@ -55,6 +56,37 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+
+// 💬 ADD COMMENT
+router.post("/:id/comments", async (req, res) => {
+  try {
+    const { userName, text } = req.body;
+
+    if (!text) {
+      return res.status(400).json({ message: "Comment text required" });
+    }
+
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const newComment = {
+      userName,
+      text,
+      createdAt: new Date(),
+    };
+
+    post.comments.push(newComment);
+    await post.save();
+
+    // last added comment return karo
+    res.status(201).json(post.comments[post.comments.length - 1]);
+  } catch (err) {
+    console.error("❌ Add comment error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 // ✅ EXPORT MUST BE THIS
 module.exports = router;

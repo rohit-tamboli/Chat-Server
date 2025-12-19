@@ -16,8 +16,8 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   // 🔍 search ke liye do states:
-  const [searchInput, setSearchInput] = useState(""); // input box me jo likh rahe ho
-  const [searchQuery, setSearchQuery] = useState(""); // jo actually filter ke liye use hoga
+  const [searchInput, setSearchInput] = useState(""); 
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   // user info init
   useEffect(() => {
@@ -256,13 +256,22 @@ function App() {
                 {post.text && <p className="post-text">{post.text}</p>}
 
                 <footer className="post-footer">
-                  <button
-                    type="button"
-                    onClick={() => handleToggleLike(post._id)}
-                  >
-                    {hasUserLiked(post, userName) ? "❤️ Liked" : "❤️ Like"}{" "}
-                    {post.likes?.length ? `(${post.likes.length})` : ""}
-                  </button>
+                  <div className="like-comment">
+                    <button
+                      type="button"
+                      onClick={() => handleToggleLike(post._id)}
+                    >
+                      {hasUserLiked(post, userName) ? "❤️ Liked" : "❤️ Like"}{" "}
+                      {post.likes?.length ? `(${post.likes.length})` : ""}
+                    </button>
+
+                    <CommentSection
+                      postId={post._id}
+                      currentUserName={userName}
+                      initialComments={post.comments || []}
+                      apiBase={API_BASE}
+                    />
+                  </div>
 
                   {/* 🗑 DELETE BUTTON */}
                   {post.userName === userName && (
@@ -274,13 +283,6 @@ function App() {
                       🗑 Delete
                     </button>
                   )}
-
-                  <CommentSection
-                    postId={post._id}
-                    currentUserName={userName}
-                    initialComments={post.comments || []}
-                    apiBase={API_BASE}
-                  />
                 </footer>
               </article>
             ))}
