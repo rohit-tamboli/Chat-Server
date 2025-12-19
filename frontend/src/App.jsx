@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import CommentSection from "./Components/CommentSection";
-import "./App.css"; // 👈 ye line add karo
+import "./App.css"; 
 
 const API_BASE = "http://localhost:5002/api";
 // const API_BASE = "https://chat-server-ashen-tau.vercel.app/api";
